@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}图书借阅系统-后台管理{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="{{ url_for('static', filename='js/jquery-1.8.3.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/book.js') }}"></script>
+</head>
+<body>
+<div class="page">
+  <h1 class="page-title">{% block pageTitle %}图书借阅系统-后台管理{% endblock %}</h1>
+  {% block content %}{% endblock %}
+</div>
+
+{#  操作提示信息：试卷图-5 / 图-7 / 图-9 使用「来自网页的消息」提示框  #}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div id="flashBox" class="flash"
+         data-message="{{ messages | map(attribute=1) | join('\n') }}"
+         data-level="{{ messages[0][0] }}"></div>
+  {% endif %}
+{% endwith %}
+</body>
+</html>
