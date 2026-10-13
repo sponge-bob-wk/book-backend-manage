@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}查看图书信息{% endblock %}
+{% block pageTitle %}查看图书信息{% endblock %}
+
+{% block content %}
+{# 查看页面：所有显示字段均为可读、不可写（试卷要求 11） #}
+<div class="form-panel" id="viewForm">
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl">图书编号:</label>
+      <input type="text" class="txt readonly" value="{{ info.bookCode }}" readonly="readonly" />
+    </div>
+    <div class="form-item">
+      <label class="lbl">图书名称:</label>
+      <input type="text" class="txt readonly" value="{{ info.bookName }}" readonly="readonly" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl">图书类型:</label>
+      <input type="text" class="txt readonly" value="{{ info.typeName }}" readonly="readonly" />
+    </div>
+    <div class="form-item">
+      <label class="lbl">作&nbsp;&nbsp;&nbsp;&nbsp;者:</label>
+      <input type="text" class="txt readonly" value="{{ info.bookAuthor }}" readonly="readonly" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl">出版社:</label>
+      <input type="text" class="txt readonly" value="{{ info.publishPress }}" readonly="readonly" />
+    </div>
+    <div class="form-item">
+      <label class="lbl">是否借阅:</label>
+      <input type="text" class="txt readonly" value="{{ info.borrowText }}" readonly="readonly" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl">入库人:</label>
+      <input type="text" class="txt readonly" value="{{ info.createdBy }}" readonly="readonly" />
+    </div>
+    <div class="form-item">
+      <label class="lbl">入库时间:</label>
+      <input type="text" class="txt readonly" value="{{ info.creationTimeText }}" readonly="readonly" />
+    </div>
+  </div>
+
+  {# 返回按钮：回到列表页并保留查询条件与查询结果（试卷要求 3） #}
+  <div class="form-actions">
+    <a class="btn"
+       href="{{ url_for('book.list_books', bookName=keyword or None, page=page) }}">返回</a>
+  </div>
+</div>
+{% endblock %}

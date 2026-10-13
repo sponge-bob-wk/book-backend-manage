@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}图书借阅系统-后台管理{% endblock %}
+{% block pageTitle %}图书借阅系统-后台管理{% endblock %}
+
+{% block content %}
+{# ---------------- 查询区：图书名称模糊查询，输入框记忆上次查询条件 ---------------- #}
+<form class="search-bar" id="searchForm" method="get"
+      action="{{ url_for('book.list_books') }}">
+  <label for="bookName">图书名称:</label>
+  <input type="text" id="bookName" name="bookName" class="txt"
+         value="{{ keyword }}" maxlength="50" />
+  <button type="submit" class="btn">查询</button>
+</form>
+
+{# ---------------- 工具区：新增 ---------------- #}
+<div class="toolbar">
+  <a class="btn" href="{{ url_for('book.add_page', bookName=keyword or None, page=page) }}">新增</a>
+</div>
+
+{# ---------------- 图书列表：隔行变色，入库时间「年-月-日」 ---------------- #}
+<table class="grid" id="bookTable">
+  <thead>
+    <tr>
+      <th style="width:85px;">图书编号</th>
+      <th style="width:70px;">图书分类</th>
+      <th>图书名称</th>
+      <th style="width:130px;">作者</th>
+      <th style="width:130px;">出版社</th>
+      <th style="width:88px;">入库时间</th>
+      <th style="width:70px;">是否借阅</th>
+      <th style="width:140px;">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for b in result.rows %}
+    <tr>
+      <td>{{ b.bookCode }}</td>
+      <td>{{ b.typeName }}</td>
+      <td>{{ b.bookName }}</td>
+      <td>{{ b.bookAuthor }}</td>
+      <td>{{ b.publishPress }}</td>
+      <td>{{ b.creationTimeText }}</td>
+      <td>{{ b.borrowText }}</td>
+      <td class="ops">
+        <a href="{{ url_for('book.view_book', book_id=b.bookId, bookName=keyword or None, page=page) }}">查看</a>
+        <a href="{{ url_for('book.edit_page', book_id=b.bookId, bookName=keyword or None, page=page) }}">修改</a>
+        <a href="{{ url_for('book.delete_book', book_id=b.bookId, bookName=keyword or None, page=page) }}"
+           class="del" data-name="{{ b.bookName }}">删除</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="8" class="empty">没有查询到符合条件的图书信息。</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{# ---------------- 分页条 ---------------- #}
+<div class="pager">
+  {% if result.hasPrev %}
+    <a href="{{ url_for('book.list_books', bookName=keyword or None, page=result.page - 1) }}">上一页</a>
+  {% else %}
+    <span class="disabled">上一页</span>
+  {% endif %}
+
+  <span class="arrow">‹</span>
+  {% for p in result.pageNumbers %}
+    {% if p == result.page %}
+      <span class="cur">{{ p }}</span>
+    {% else %}
+      <a href="{{ url_for('book.list_books', bookName=keyword or None, page=p) }}">{{ p }}</a>
+    {% endif %}
+  {% endfor %}
+  <span class="arrow">›</span>
+
+  {% if result.hasNext %}
+    <a href="{{ url_for('book.list_books', bookName=keyword or None, page=result.page + 1) }}">下一页</a>
+  {% else %}
+    <span class="disabled">下一页</span>
+  {% endif %}
+
+  <span class="total">共{{ result.totalPages }}页</span>
+  <span class="jump">
+    到<input type="text" id="jumpPage" class="jump-txt" value="{{ result.page }}" maxlength="4" />页
+    <button type="button" class="btn btn-small" id="jumpBtn">确定</button>
+  </span>
+</div>
+
+{# 分页跳转所需的上下文 #}
+<div id="pageCtx" class="hidden"
+     data-base="{{ url_for('book.list_books', bookName=keyword or None) }}"
+     data-total="{{ result.totalPages }}"></div>
+{% endblock %}

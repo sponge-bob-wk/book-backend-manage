@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}修改图书信息{% endblock %}
+{% block pageTitle %}修改图书信息{% endblock %}
+
+{% block content %}
+{# 修改页面（试卷要求 13）：
+   可修改：图书编号、图书名称、图书类型、作者、出版社、是否借阅
+   只读（不可修改）：入库人、入库时间 #}
+<form class="form-panel" id="bookForm" method="post"
+      action="{{ url_for('book.edit_submit', book_id=info.bookId) }}">
+  <input type="hidden" name="backKeyword" value="{{ keyword }}" />
+  <input type="hidden" name="backPage" value="{{ page }}" />
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl" for="bookCode">图书编号:</label>
+      <input type="text" id="bookCode" name="bookCode" class="txt"
+             value="{{ info.bookCode }}" maxlength="30" />
+      <span class="star">*</span>
+    </div>
+    <div class="form-item">
+      <label class="lbl" for="bookName">图书名称:</label>
+      <input type="text" id="bookName" name="bookName" class="txt"
+             value="{{ info.bookName }}" maxlength="100" />
+      <span class="star">*</span>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl" for="bookType">图书类型:</label>
+      <select id="bookType" name="bookType" class="txt">
+        <option value="">——请选择——</option>
+        {% for t in types %}
+        <option value="{{ t.id }}" {% if t.id == info.bookType %}selected="selected"{% endif %}>{{ t.typeName }}</option>
+        {% endfor %}
+      </select>
+      <span class="star">*</span>
+    </div>
+    <div class="form-item">
+      <label class="lbl" for="bookAuthor">作&nbsp;&nbsp;&nbsp;&nbsp;者:</label>
+      <input type="text" id="bookAuthor" name="bookAuthor" class="txt"
+             value="{{ info.bookAuthor }}" maxlength="100" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl" for="publishPress">出版社:</label>
+      <input type="text" id="publishPress" name="publishPress" class="txt"
+             value="{{ info.publishPress }}" maxlength="100" />
+    </div>
+    <div class="form-item">
+      <label class="lbl" for="borrowed">是否借阅:</label>
+      <select id="borrowed" name="borrowed" class="txt">
+        <option value="0" {% if info.borrowed == 0 %}selected="selected"{% endif %}>未借阅</option>
+        <option value="1" {% if info.borrowed == 1 %}selected="selected"{% endif %}>已借阅</option>
+      </select>
+      <span class="star">*</span>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl">入库人:</label>
+      <input type="text" class="txt readonly" value="{{ info.createdBy }}" readonly="readonly" />
+      <span class="star">*</span>
+    </div>
+    <div class="form-item">
+      <label class="lbl">入库时间:</label>
+      <input type="text" class="txt readonly" value="{{ info.creationTimeText }}" readonly="readonly" />
+      <span class="star">*</span>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn">修改</button>
+    <a class="btn"
+       href="{{ url_for('book.list_books', bookName=keyword or None, page=page) }}">返回</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}新增图书信息{% endblock %}
+{% block pageTitle %}新增图书信息{% endblock %}
+
+{% block content %}
+{# 新增页面（试卷要求 12）：
+   必填项 = 图书编号、图书名称、图书类型、是否借阅、入库人、入库时间（页面用 * 标注）
+   图书类型下拉数据必须来源于 book_type 表；入库人为当前登录用户，此处固定「系统管理员」
+   入库时间默认当前时间；是否借阅默认未借阅 #}
+<form class="form-panel" id="bookForm" method="post"
+      action="{{ url_for('book.add_submit') }}">
+  <input type="hidden" name="backKeyword" value="{{ keyword }}" />
+  <input type="hidden" name="backPage" value="{{ page }}" />
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl" for="bookCode">图书编号:</label>
+      <input type="text" id="bookCode" name="bookCode" class="txt" maxlength="30" />
+      <span class="star">*</span>
+    </div>
+    <div class="form-item">
+      <label class="lbl" for="bookName">图书名称:</label>
+      <input type="text" id="bookName" name="bookName" class="txt" maxlength="100" />
+      <span class="star">*</span>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl" for="bookType">图书类型:</label>
+      <select id="bookType" name="bookType" class="txt">
+        <option value="">——请选择——</option>
+        {% for t in types %}
+        <option value="{{ t.id }}">{{ t.typeName }}</option>
+        {% endfor %}
+      </select>
+      <span class="star">*</span>
+    </div>
+    <div class="form-item">
+      <label class="lbl" for="bookAuthor">作&nbsp;&nbsp;&nbsp;&nbsp;者:</label>
+      <input type="text" id="bookAuthor" name="bookAuthor" class="txt" maxlength="100" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl" for="publishPress">出版社:</label>
+      <input type="text" id="publishPress" name="publishPress" class="txt" maxlength="100" />
+    </div>
+    <div class="form-item">
+      <label class="lbl" for="borrowed">是否借阅:</label>
+      <select id="borrowed" name="borrowed" class="txt">
+        <option value="0">未借阅</option>
+        <option value="1">已借阅</option>
+      </select>
+      <span class="star">*</span>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-item">
+      <label class="lbl" for="createdBy">入库人:</label>
+      <input type="text" id="createdBy" name="createdBy" class="txt"
+             value="{{ default_operator }}" maxlength="50" />
+      <span class="star">*</span>
+    </div>
+    <div class="form-item">
+      <label class="lbl" for="creationTime">入库时间:</label>
+      <input type="text" id="creationTime" name="creationTime" class="txt"
+             value="{{ default_time }}" placeholder="yyyy-MM-dd" maxlength="10" />
+      <span class="star">*</span>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn">保存</button>
+    <a class="btn"
+       href="{{ url_for('book.list_books', bookName=keyword or None, page=page) }}">返回</a>
+  </div>
+</form>
+{% endblock %}
